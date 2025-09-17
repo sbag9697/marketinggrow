@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 Entry ID 찾기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .step {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #4A90E2;
+        }
+        .step h2 {
+            color: #4A90E2;
+            margin-bottom: 15px;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        .copy-btn {
+            background: #28a745;
+            font-size: 14px;
+            padding: 8px 15px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .entry-list {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .entry-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .field-mapping {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 15px;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .field-mapping label {
+            font-weight: bold;
+            color: #555;
+        }
+        .field-mapping input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 구글 폼 Entry ID 찾기 도구</h1>
+
+        <div class="warning">
+            ⚠️ <strong>중요:</strong> 이 페이지는 Entry ID를 찾기 위한 도구입니다. 실제 웹사이트와는 별개로 사용하세요.
+        </div>
+
+        <div class="step">
+            <h2>방법 1: 구글 폼에서 직접 확인하기 (권장)</h2>
+
+            <p>1. 아래 버튼을 클릭하여 구글 폼을 새 창으로 엽니다:</p>
+            <button onclick="openGoogleForm()">📝 구글 폼 열기</button>
+
+            <p>2. 열린 구글 폼에서 <strong>F12</strong>를 눌러 개발자 도구를 엽니다</p>
+
+            <p>3. 각 입력 필드를 우클릭 → "검사(Inspect)"를 선택합니다</p>
+
+            <p>4. HTML에서 <code>name="entry.XXXXXXXX"</code> 형태의 값을 찾습니다</p>
+
+            <div class="code-block">
+                예시: &lt;input name="entry.1234567890" ...&gt;
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>방법 2: 페이지 소스 보기</h2>
+
+            <p>1. 구글 폼 페이지에서 우클릭 → "페이지 소스 보기"</p>
+
+            <p>2. Ctrl+F로 "entry." 검색</p>
+
+            <p>3. 아래와 같은 패턴을 찾습니다:</p>
+
+            <div class="code-block">
+                FB_PUBLIC_LOAD_DATA_ = [null,[null,[[123456789,"이름",null,0,[[1234567890,
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>찾은 Entry ID 입력하기</h2>
+
+            <div class="entry-list">
+                <div class="field-mapping">
+                    <label>이름 필드:</label>
+                    <input type="text" id="entry-name" placeholder="entry.XXXXXXXXX">
+                    <button class="copy-btn" onclick="copyEntry('name')">복사</button>
+                </div>
+
+                <div class="field-mapping">
+                    <label>이메일 필드:</label>
+                    <input type="text" id="entry-email" placeholder="entry.XXXXXXXXX">
+                    <button class="copy-btn" onclick="copyEntry('email')">복사</button>
+                </div>
+
+                <div class="field-mapping">
+                    <label>연락처 필드:</label>
+                    <input type="text" id="entry-phone" placeholder="entry.XXXXXXXXX">
+                    <button class="copy-btn" onclick="copyEntry('phone')">복사</button>
+                </div>
+
+                <div class="field-mapping">
+                    <label>서비스 선택:</label>
+                    <input type="text" id="entry-service" placeholder="entry.XXXXXXXXX">
+                    <button class="copy-btn" onclick="copyEntry('service')">복사</button>
+                </div>
+
+                <div class="field-mapping">
+                    <label>메시지 필드:</label>
+                    <input type="text" id="entry-message" placeholder="entry.XXXXXXXXX">
+                    <button class="copy-btn" onclick="copyEntry('message')">복사</button>
+                </div>
+            </div>
+
+            <button onclick="generateCode()">📋 HTML 코드 생성</button>
+            <button onclick="testSubmit()">🧪 테스트 전송</button>
+        </div>
+
+        <div class="step" id="generated-code" style="display:none;">
+            <h2>생성된 HTML 코드</h2>
+            <p>아래 코드를 복사하여 index.html의 문의 폼 부분에 붙여넣으세요:</p>
+            <div class="code-block" id="code-output"></div>
+            <button onclick="copyCode()">전체 코드 복사</button>
+        </div>
+
+        <div class="step">
+            <h2>테스트 폼</h2>
+            <form id="test-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse"
+                  method="POST" target="test-iframe">
+                <div style="margin: 15px 0;">
+                    <label>이름:</label><br>
+                    <input type="text" id="test-name" name="" placeholder="테스트 이름" style="width: 100%; padding: 10px;">
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <label>이메일:</label><br>
+                    <input type="email" id="test-email" name="" placeholder="test@example.com" style="width: 100%; padding: 10px;">
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <label>연락처:</label><br>
+                    <input type="tel" id="test-phone" name="" placeholder="010-0000-0000" style="width: 100%; padding: 10px;">
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <label>서비스:</label><br>
+                    <select id="test-service" name="" style="width: 100%; padding: 10px;">
+                        <option value="">선택하세요</option>
+                        <option value="SEO">SEO</option>
+                        <option value="소셜미디어">소셜미디어</option>
+                        <option value="네이버 블로그 체험단">네이버 블로그 체험단</option>
+                        <option value="크리에이티브 제작">크리에이티브 제작</option>
+                        <option value="통합 마케팅">통합 마케팅</option>
+                    </select>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <label>메시지:</label><br>
+                    <textarea id="test-message" name="" rows="4" placeholder="테스트 메시지" style="width: 100%; padding: 10px;"></textarea>
+                </div>
+
+                <button type="submit">전송 테스트</button>
+            </form>
+
+            <iframe name="test-iframe" style="display:none;"></iframe>
+            <div id="test-result" style="display:none;" class="success">
+                ✅ 테스트 전송 완료! 구글 폼 응답 페이지에서 확인하세요.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 구글 폼 ID
+        const formId = '1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk';
+
+        function openGoogleForm() {
+            window.open(`https://docs.google.com/forms/d/e/${formId}/viewform`, '_blank');
+        }
+
+        function copyEntry(field) {
+            const input = document.getElementById(`entry-${field}`);
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert(`${field} Entry ID 복사됨!`);
+            });
+        }
+
+        function generateCode() {
+            const entries = {
+                name: document.getElementById('entry-name').value,
+                email: document.getElementById('entry-email').value,
+                phone: document.getElementById('entry-phone').value,
+                service: document.getElementById('entry-service').value,
+                message: document.getElementById('entry-message').value
+            };
+
+            const code = `
+<form id="contactForm" action="https://docs.google.com/forms/d/e/${formId}/formResponse" method="POST" target="hidden_iframe">
+    <div class="form-group">
+        <input type="text" name="${entries.name}" id="name" placeholder="이름" required>
+    </div>
+    <div class="form-group">
+        <input type="email" name="${entries.email}" id="email" placeholder="이메일" required>
+    </div>
+    <div class="form-group">
+        <input type="tel" name="${entries.phone}" id="phone" placeholder="연락처">
+    </div>
+    <div class="form-group">
+        <select name="${entries.service}" id="service" required>
+            <option value="">관심 서비스 선택</option>
+            <option value="SEO">SEO</option>
+            <option value="소셜미디어">소셜미디어</option>
+            <option value="네이버 블로그 체험단">네이버 블로그 체험단</option>
+            <option value="크리에이티브 제작">크리에이티브 제작</option>
+            <option value="통합 마케팅">통합 마케팅</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <textarea name="${entries.message}" id="message" rows="5" placeholder="프로젝트에 대해 알려주세요" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">문의 보내기</button>
+</form>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>`;
+
+            document.getElementById('code-output').textContent = code;
+            document.getElementById('generated-code').style.display = 'block';
+
+            // 테스트 폼에도 적용
+            updateTestForm(entries);
+        }
+
+        function updateTestForm(entries) {
+            document.getElementById('test-name').name = entries.name;
+            document.getElementById('test-email').name = entries.email;
+            document.getElementById('test-phone').name = entries.phone;
+            document.getElementById('test-service').name = entries.service;
+            document.getElementById('test-message').name = entries.message;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('code-output').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('HTML 코드가 복사되었습니다!');
+            });
+        }
+
+        function testSubmit() {
+            const entries = {
+                name: document.getElementById('entry-name').value,
+                email: document.getElementById('entry-email').value,
+                phone: document.getElementById('entry-phone').value,
+                service: document.getElementById('entry-service').value,
+                message: document.getElementById('entry-message').value
+            };
+
+            if (!entries.name || !entries.email || !entries.message) {
+                alert('Entry ID를 모두 입력해주세요!');
+                return;
+            }
+
+            updateTestForm(entries);
+            document.getElementById('test-form').submit();
+
+            setTimeout(() => {
+                document.getElementById('test-result').style.display = 'block';
+            }, 1000);
+        }
+
+        // 폼 제출 이벤트
+        document.getElementById('test-form').addEventListener('submit', function(e) {
+            setTimeout(() => {
+                document.getElementById('test-result').style.display = 'block';
+                this.reset();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

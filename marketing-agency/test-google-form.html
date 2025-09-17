@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        .success {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>구글 폼 테스트 페이지</h1>
+
+        <div class="info">
+            📌 이 페이지는 구글 폼 연동을 테스트하는 페이지입니다.<br>
+            폼 ID: 1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk
+        </div>
+
+        <form id="testForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse"
+              method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+
+            <div class="form-group">
+                <label for="name">이름 *</label>
+                <input type="text" name="entry.2064971834" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">이메일 *</label>
+                <input type="email" name="entry.804776312" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">연락처</label>
+                <input type="tel" name="entry.1523157657" id="phone">
+            </div>
+
+            <div class="form-group">
+                <label for="service">관심 서비스 *</label>
+                <select name="entry.43673710" id="service" required>
+                    <option value="">선택하세요</option>
+                    <option value="SEO">SEO</option>
+                    <option value="소셜미디어">소셜미디어</option>
+                    <option value="네이버 블로그 체험단">네이버 블로그 체험단</option>
+                    <option value="크리에이티브 제작">크리에이티브 제작</option>
+                    <option value="통합 마케팅">통합 마케팅</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">메시지 *</label>
+                <textarea name="entry.1247013362" id="message" rows="5" required></textarea>
+            </div>
+
+            <button type="submit">테스트 전송</button>
+        </form>
+
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) showSuccess()"></iframe>
+
+        <div id="success" class="success">
+            ✅ 폼이 성공적으로 제출되었습니다!<br>
+            구글 폼 응답 페이지에서 확인해보세요.
+        </div>
+    </div>
+
+    <script>
+        var submitted = false;
+
+        function showSuccess() {
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('testForm').reset();
+            submitted = false;
+
+            // 3초 후 성공 메시지 숨기기
+            setTimeout(function() {
+                document.getElementById('success').style.display = 'none';
+            }, 5000);
+        }
+
+        // 폼 제출 시 로그
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            console.log('폼 제출됨');
+            console.log('이름:', document.getElementById('name').value);
+            console.log('이메일:', document.getElementById('email').value);
+            console.log('연락처:', document.getElementById('phone').value);
+            console.log('서비스:', document.getElementById('service').value);
+            console.log('메시지:', document.getElementById('message').value);
+        });
+    </script>
+</body>
+</html>

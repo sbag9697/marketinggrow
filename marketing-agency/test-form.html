@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 Entry ID 찾기 테스트</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4A90E2;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #4A90E2;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .form-url {
+            word-break: break-all;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        #entries {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+        }
+        .entry-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        .copy-btn {
+            background: #28a745;
+            font-size: 12px;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>구글 폼 Entry ID 찾기</h1>
+
+        <div class="info">
+            <strong>폼 ID:</strong> 1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk
+        </div>
+
+        <div class="step">
+            <h3>방법 1: 구글 폼 미리보기에서 직접 확인</h3>
+            <p>1. 아래 버튼을 클릭하여 구글 폼을 새 창에서 엽니다:</p>
+            <button onclick="openForm()">구글 폼 열기</button>
+
+            <p>2. 열린 폼에서 F12를 눌러 개발자 도구를 엽니다</p>
+            <p>3. 각 입력 필드를 우클릭 → "검사(Inspect)"를 선택합니다</p>
+            <p>4. <code>name="entry.XXXXXXX"</code> 형태의 값을 찾습니다</p>
+        </div>
+
+        <div class="step">
+            <h3>방법 2: 자동 스캔 (iframe 사용)</h3>
+            <p>아래 버튼을 클릭하여 폼 구조를 스캔합니다:</p>
+            <button onclick="scanForm()">폼 스캔하기</button>
+            <div id="entries"></div>
+        </div>
+
+        <div class="step">
+            <h3>일반적인 Entry ID 패턴</h3>
+            <p>구글 폼의 entry ID는 보통 다음과 같은 패턴을 따릅니다:</p>
+            <ul>
+                <li>첫 번째 필드: entry.0부터 시작하거나 무작위 숫자</li>
+                <li>각 필드마다 고유한 10자리 숫자 ID</li>
+                <li>예: entry.1234567890, entry.987654321 등</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>예상 Entry ID (수동 입력용)</h3>
+            <div class="entry-item">
+                이름: <code>entry.1045781291</code>
+                <button class="copy-btn" onclick="copyToClipboard('entry.1045781291')">복사</button>
+            </div>
+            <div class="entry-item">
+                이메일: <code>entry.1065046570</code>
+                <button class="copy-btn" onclick="copyToClipboard('entry.1065046570')">복사</button>
+            </div>
+            <div class="entry-item">
+                연락처: <code>entry.1166974658</code>
+                <button class="copy-btn" onclick="copyToClipboard('entry.1166974658')">복사</button>
+            </div>
+            <div class="entry-item">
+                서비스: <code>entry.839337160</code>
+                <button class="copy-btn" onclick="copyToClipboard('entry.839337160')">복사</button>
+            </div>
+            <div class="entry-item">
+                메시지: <code>entry.1015826565</code>
+                <button class="copy-btn" onclick="copyToClipboard('entry.1015826565')">복사</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>테스트 폼</h3>
+            <p>아래 폼으로 직접 테스트해보세요:</p>
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse"
+                  method="POST" target="test_iframe">
+                <div style="margin: 10px 0;">
+                    <input type="text" name="entry.1045781291" placeholder="이름 테스트" style="width: 100%; padding: 8px;">
+                </div>
+                <div style="margin: 10px 0;">
+                    <input type="email" name="entry.1065046570" placeholder="이메일 테스트" style="width: 100%; padding: 8px;">
+                </div>
+                <div style="margin: 10px 0;">
+                    <input type="tel" name="entry.1166974658" placeholder="연락처 테스트" style="width: 100%; padding: 8px;">
+                </div>
+                <div style="margin: 10px 0;">
+                    <select name="entry.839337160" style="width: 100%; padding: 8px;">
+                        <option value="">서비스 선택</option>
+                        <option value="SEO">SEO</option>
+                        <option value="광고">디지털 광고</option>
+                        <option value="소셜">소셜미디어</option>
+                    </select>
+                </div>
+                <div style="margin: 10px 0;">
+                    <textarea name="entry.1015826565" placeholder="메시지 테스트" style="width: 100%; padding: 8px;" rows="4"></textarea>
+                </div>
+                <button type="submit">테스트 전송</button>
+            </form>
+            <iframe name="test_iframe" style="display: none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openForm() {
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/viewform', '_blank');
+        }
+
+        function scanForm() {
+            const entries = document.getElementById('entries');
+            entries.style.display = 'block';
+            entries.innerHTML = `
+                <p><strong>스캔 결과:</strong></p>
+                <p>CORS 정책으로 인해 직접 스캔은 불가능합니다.</p>
+                <p>위의 "구글 폼 열기" 버튼을 클릭한 후 수동으로 확인해주세요.</p>
+                <p>또는 아래 테스트 폼으로 시도해보세요.</p>
+            `;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(text + ' 복사됨!');
+            });
+        }
+
+        // 폼 제출 후 알림
+        document.querySelector('form').addEventListener('submit', function(e) {
+            setTimeout(() => {
+                alert('테스트 전송 완료! 구글 폼 응답 페이지에서 확인하세요.');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

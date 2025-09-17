@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 직접 제출 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .method {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #4A90E2;
+        }
+        .btn {
+            background: #4A90E2;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #357abd;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>구글 폼 직접 제출 테스트</h1>
+
+    <div class="method">
+        <h2>방법 1: 구글 폼 원본 페이지에서 테스트</h2>
+        <p>구글 폼 페이지에서 직접 제출해보고 응답이 오는지 확인합니다.</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/viewform" target="_blank" class="btn">구글 폼 열기</a>
+    </div>
+
+    <div class="method">
+        <h2>방법 2: URL 직접 전송 테스트</h2>
+        <p>아래 링크를 클릭하면 테스트 데이터가 자동으로 전송됩니다:</p>
+        <a href="#" onclick="submitTest()" class="btn">테스트 데이터 전송</a>
+
+        <script>
+            function submitTest() {
+                const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse';
+                const params = new URLSearchParams({
+                    'entry.2064971834': '테스트 이름',
+                    'entry.804776312': 'test@example.com',
+                    'entry.1523157657': '010-1234-5678',
+                    'entry.43673710': '네이버 블로그 체험단',
+                    'entry.1247013362': '테스트 메시지입니다.'
+                });
+
+                const url = baseUrl + '?' + params.toString();
+                window.open(url, '_blank');
+                alert('새 창에서 구글 폼이 열렸습니다. 제출 버튼을 클릭해주세요.');
+                return false;
+            }
+        </script>
+    </div>
+
+    <div class="method">
+        <h2>방법 3: 구글 폼 응답 확인</h2>
+        <p>제출한 응답을 확인하려면:</p>
+        <ol>
+            <li>구글 계정으로 로그인</li>
+            <li>아래 링크 클릭</li>
+            <li>"응답" 탭 확인</li>
+        </ol>
+        <a href="https://docs.google.com/forms/d/17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/edit#responses" target="_blank" class="btn">응답 페이지 열기</a>
+    </div>
+
+    <div class="method">
+        <h2>Entry ID 확인</h2>
+        <p>현재 사용 중인 Entry ID:</p>
+        <ul>
+            <li>이름: <code>entry.2064971834</code></li>
+            <li>이메일: <code>entry.804776312</code></li>
+            <li>연락처: <code>entry.1523157657</code></li>
+            <li>서비스: <code>entry.43673710</code></li>
+            <li>메시지: <code>entry.1247013362</code></li>
+        </ul>
+    </div>
+
+    <div class="method">
+        <h2>🔴 중요 체크사항</h2>
+        <ul>
+            <li>구글 폼 소유자 계정으로 로그인했는지 확인</li>
+            <li>구글 폼이 "응답 수락 중" 상태인지 확인</li>
+            <li>구글 폼 설정에서 "응답 수집" 켜져 있는지 확인</li>
+            <li>구글 폼이 공개 설정되어 있는지 확인</li>
+        </ul>
+    </div>
+</body>
+</html>

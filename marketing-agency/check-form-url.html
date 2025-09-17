@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 URL 확인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .url-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #357abd; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        iframe { width: 100%; height: 600px; border: 2px solid #ddd; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>구글 폼 URL 확인 및 테스트</h1>
+
+        <h2>1. 구글 폼 미리보기 확인</h2>
+        <p>아래 버튼을 클릭하여 구글 폼을 열고, 개발자 도구(F12)에서 form 태그의 action URL을 확인하세요:</p>
+
+        <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/viewform', '_blank')">
+            미리보기 URL 열기 (현재 사용 중)
+        </button>
+
+        <button onclick="window.open('https://docs.google.com/forms/d/17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/viewform', '_blank')">
+            대체 URL 열기 (편집 ID 기반)
+        </button>
+
+        <h2>2. 현재 설정된 URL</h2>
+        <div class="url-box">
+            https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse
+        </div>
+
+        <h2>3. 직접 테스트</h2>
+        <p>두 가지 형식으로 테스트해보세요:</p>
+
+        <h3>테스트 1: 현재 사용 중인 URL</h3>
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse"
+              method="POST" target="test_iframe1">
+            <input type="hidden" name="entry.2064971834" value="테스트1">
+            <input type="hidden" name="entry.804776312" value="test1@example.com">
+            <input type="hidden" name="entry.1523157657" value="010-1111-1111">
+            <input type="hidden" name="entry.43673710" value="SEO">
+            <input type="hidden" name="entry.1247013362" value="현재 URL 테스트">
+            <button type="submit">테스트 1 전송</button>
+        </form>
+        <iframe name="test_iframe1" style="display:none;"></iframe>
+
+        <h3>테스트 2: 대체 URL (편집 ID 기반)</h3>
+        <form action="https://docs.google.com/forms/d/17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse"
+              method="POST" target="test_iframe2">
+            <input type="hidden" name="entry.2064971834" value="테스트2">
+            <input type="hidden" name="entry.804776312" value="test2@example.com">
+            <input type="hidden" name="entry.1523157657" value="010-2222-2222">
+            <input type="hidden" name="entry.43673710" value="소셜미디어">
+            <input type="hidden" name="entry.1247013362" value="대체 URL 테스트">
+            <button type="submit">테스트 2 전송</button>
+        </form>
+        <iframe name="test_iframe2" style="display:none;"></iframe>
+
+        <h2>4. 구글 폼 응답 확인</h2>
+        <button onclick="window.open('https://docs.google.com/forms/d/17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/edit#responses', '_blank')">
+            응답 페이지 열기
+        </button>
+
+        <h2>5. Entry ID 재확인</h2>
+        <p>구글 폼 미리보기 페이지에서 F12를 누르고, Console에 다음 코드를 붙여넣어 Entry ID를 확인하세요:</p>
+        <div class="url-box">
+document.querySelectorAll('[name^="entry."]').forEach(input => {
+    console.log(input.getAttribute('aria-label'), ':', input.name);
+});
+        </div>
+
+        <h2>6. CORS 우회 테스트</h2>
+        <p>CORS 문제일 수 있으니 다음 방법도 시도해보세요:</p>
+        <button onclick="testWithImage()">이미지 방식 테스트</button>
+
+        <script>
+            function testWithImage() {
+                const img = new Image();
+                const params = new URLSearchParams({
+                    'entry.2064971834': '이미지테스트',
+                    'entry.804776312': 'imgtest@example.com',
+                    'entry.1523157657': '010-3333-3333',
+                    'entry.43673710': '네이버 블로그 체험단',
+                    'entry.1247013362': '이미지 방식 테스트'
+                });
+
+                img.src = 'https://docs.google.com/forms/d/e/1FAIpQLSfL17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/formResponse?' + params.toString();
+
+                alert('테스트 전송 시도됨. 구글 폼 응답 페이지에서 확인하세요.');
+            }
+
+            // 폼 제출 시 알림
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function() {
+                    setTimeout(() => {
+                        alert('테스트 전송됨. 구글 폼 응답 페이지에서 확인하세요.');
+                    }, 1000);
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

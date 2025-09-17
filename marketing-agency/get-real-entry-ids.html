@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 Entry ID 직접 찾기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4A90E2;
+        }
+        .step h2 {
+            color: #4A90E2;
+            margin-bottom: 15px;
+        }
+        .code-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .button-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        .success-btn {
+            background: #28a745;
+        }
+        .success-btn:hover {
+            background: #218838;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+        .result {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 구글 폼 Entry ID 직접 찾기</h1>
+
+        <div class="warning">
+            <strong>⚠️ 중요:</strong> 구글 폼의 실제 Entry ID를 찾으려면 구글 폼 미리보기 페이지에서 개발자 도구를 사용해야 합니다.
+        </div>
+
+        <div class="step">
+            <h2>📌 Step 1: 구글 폼 미리보기 열기</h2>
+            <p>아래 버튼을 클릭하여 구글 폼을 새 창으로 엽니다:</p>
+            <div class="button-group">
+                <button onclick="openForm()">구글 폼 미리보기 열기</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📌 Step 2: 개발자 도구 Console에서 Entry ID 찾기</h2>
+            <p>1. 구글 폼 페이지에서 <strong>F12</strong>를 눌러 개발자 도구를 엽니다</p>
+            <p>2. <strong>Console</strong> 탭을 클릭합니다</p>
+            <p>3. 아래 코드를 복사하여 Console에 붙여넣고 Enter를 누릅니다:</p>
+
+            <div class="code-box" id="code1">
+// Entry ID 찾기 스크립트
+console.log("=== 구글 폼 Entry ID 목록 ===");
+document.querySelectorAll('[name^="entry."]').forEach((input, index) => {
+    const label = input.getAttribute('aria-label') ||
+                  input.closest('.freebirdFormviewerComponentsQuestionBaseRoot')?.querySelector('.freebirdFormviewerComponentsQuestionBaseTitle')?.textContent ||
+                  `필드 ${index + 1}`;
+    console.log(`${label}: ${input.name}`);
+});
+
+// 선택 필드 확인
+document.querySelectorAll('select[name^="entry."]').forEach(select => {
+    const label = select.getAttribute('aria-label') || "선택 필드";
+    console.log(`[SELECT] ${label}: ${select.name}`);
+});
+
+// 라디오/체크박스 확인
+document.querySelectorAll('input[type="radio"][name^="entry."], input[type="checkbox"][name^="entry."]').forEach(input => {
+    const label = input.getAttribute('aria-label') || "선택 옵션";
+    console.log(`[OPTION] ${label}: ${input.name}`);
+});
+            </div>
+
+            <div class="button-group">
+                <button onclick="copyCode('code1')">코드 복사</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📌 Step 3: 대체 방법 - 페이지 소스에서 찾기</h2>
+            <p>Console이 작동하지 않으면 이 방법을 사용하세요:</p>
+            <p>1. 구글 폼 페이지에서 우클릭 → "페이지 소스 보기"</p>
+            <p>2. <strong>Ctrl+F</strong>로 "entry." 검색</p>
+            <p>3. 아래 코드로 action URL도 확인:</p>
+
+            <div class="code-box" id="code2">
+// Form Action URL 찾기
+const form = document.querySelector('form');
+if (form) {
+    console.log("Form Action URL:", form.action);
+} else {
+    // 대체 방법
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach(script => {
+        if (script.textContent.includes('formResponse')) {
+            const match = script.textContent.match(/\/forms\/d\/e\/([^\/]+)\/formResponse/);
+            if (match) {
+                console.log("Form ID:", match[1]);
+                console.log("Full URL:", `https://docs.google.com/forms/d/e/${match[1]}/formResponse`);
+            }
+        }
+    });
+}
+            </div>
+
+            <div class="button-group">
+                <button onclick="copyCode('code2')">코드 복사</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📌 Step 4: 찾은 Entry ID 입력</h2>
+            <p>Console에서 찾은 Entry ID를 아래에 입력하세요:</p>
+            <textarea id="entryIds" placeholder="예시:
+이름: entry.1234567890
+이메일: entry.0987654321
+연락처: entry.1111111111
+서비스 선택: entry.2222222222
+메시지: entry.3333333333"></textarea>
+
+            <div class="button-group">
+                <button class="success-btn" onclick="generateFinalCode()">최종 HTML 코드 생성</button>
+            </div>
+        </div>
+
+        <div id="result" class="result">
+            <h3>✅ 생성된 HTML 코드</h3>
+            <textarea id="finalCode" readonly></textarea>
+            <div class="button-group">
+                <button onclick="copyFinalCode()">코드 복사</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 문제 해결</h2>
+            <ul>
+                <li><strong>Entry ID가 안 보이는 경우:</strong> 구글 폼이 iframe 안에 있을 수 있습니다. iframe 내부를 확인하세요.</li>
+                <li><strong>Console 에러가 나는 경우:</strong> 페이지가 완전히 로드된 후 시도하세요.</li>
+                <li><strong>폼 제출이 안 되는 경우:</strong> CORS 정책 때문일 수 있습니다. 서버에서 실행해야 할 수도 있습니다.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openForm() {
+            // 두 가지 URL 모두 시도
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSdADIfOi6-ud-twkSPDpurODnk_BK4MdZAMRC4XRTjM0fHzaA/viewform', '_blank');
+            // 또는
+            // window.open('https://docs.google.com/forms/d/17Q-GI9R5p6HmkvBsLiAjzyozjOVf-Md3W3Cj379BzCk/viewform', '_blank');
+        }
+
+        function copyCode(id) {
+            const code = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('코드가 복사되었습니다!');
+            });
+        }
+
+        function generateFinalCode() {
+            const input = document.getElementById('entryIds').value;
+            if (!input.trim()) {
+                alert('Entry ID를 입력해주세요!');
+                return;
+            }
+
+            // Entry ID 파싱
+            const entries = {};
+            const lines = input.split('\n');
+            lines.forEach(line => {
+                if (line.includes('entry.')) {
+                    if (line.toLowerCase().includes('이름') || line.toLowerCase().includes('name')) {
+                        entries.name = line.match(/entry\.\d+/)[0];
+                    } else if (line.toLowerCase().includes('이메일') || line.toLowerCase().includes('email')) {
+                        entries.email = line.match(/entry\.\d+/)[0];
+                    } else if (line.toLowerCase().includes('연락처') || line.toLowerCase().includes('phone')) {
+                        entries.phone = line.match(/entry\.\d+/)[0];
+                    } else if (line.toLowerCase().includes('서비스') || line.toLowerCase().includes('service')) {
+                        entries.service = line.match(/entry\.\d+/)[0];
+                    } else if (line.toLowerCase().includes('메시지') || line.toLowerCase().includes('message')) {
+                        entries.message = line.match(/entry\.\d+/)[0];
+                    }
+                }
+            });
+
+            const html = `<form id="contactForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdADIfOi6-ud-twkSPDpurODnk_BK4MdZAMRC4XRTjM0fHzaA/formResponse" method="POST" target="hidden_iframe">
+    <div class="form-group">
+        <input type="text" name="${entries.name || 'entry.XXXXX'}" id="name" placeholder="이름" required>
+    </div>
+    <div class="form-group">
+        <input type="email" name="${entries.email || 'entry.XXXXX'}" id="email" placeholder="이메일" required>
+    </div>
+    <div class="form-group">
+        <input type="tel" name="${entries.phone || 'entry.XXXXX'}" id="phone" placeholder="연락처">
+    </div>
+    <div class="form-group">
+        <select name="${entries.service || 'entry.XXXXX'}" id="service" required>
+            <option value="">관심 서비스 선택</option>
+            <option value="SEO">SEO</option>
+            <option value="소셜미디어">소셜미디어</option>
+            <option value="네이버 블로그 체험단">네이버 블로그 체험단</option>
+            <option value="크리에이티브 제작">크리에이티브 제작</option>
+            <option value="통합 마케팅">통합 마케팅</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <textarea name="${entries.message || 'entry.XXXXX'}" id="message" rows="5" placeholder="프로젝트에 대해 알려주세요" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">문의 보내기</button>
+</form>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>`;
+
+            document.getElementById('finalCode').value = html;
+            document.getElementById('result').style.display = 'block';
+        }
+
+        function copyFinalCode() {
+            const code = document.getElementById('finalCode').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('HTML 코드가 복사되었습니다!');
+            });
+        }
+    </script>
+</body>
+</html>
